@@ -7,6 +7,10 @@ from aiogram.dispatcher import FSMContext
 import json
 import requests
 from datetime import date, timedelta
+from calendar import monthrange
+#from keyboards.user.inlinekb import months_ikb
+from aiogram_calendar import SimpleCalendar
+from utils.other import get_months_duration
 
 class AddWorktime(StatesGroup):
     welcome_msg = State()
@@ -15,22 +19,12 @@ class AddWorktime(StatesGroup):
     get_lunch_hour_state = State()
 
 async def command_start(message:types.Message):
-    x = 8
-    workday = 8
-    for i in range(workday):
-        if x==12:
-            print(f'''Обед {x}''')
-            x=x+1
-        else:
-            print(f'''{x}:00''')
-            x=x+1
-    year = "2024"
-    url = 'https://raw.githubusercontent.com/d10xa/holidays-calendar/master/json/consultant' + year + '.json'
-    r = requests.get(url)
-    cal = json.loads(r.text)
-    print(cal["holidays"].count("2024-12-12"))
-    now = datetime.datetime.today()
-    print(now.strftime('%Y'))
+    kb = await SimpleCalendar().start_calendar()
+    await bot.send_message(message.from_user.id, 'Выберите дату', reply_markup=kb)
+    x = get_months_duration()
+    print(x)
+
+
 
 async def add_worktime(message:types.Message):
     await bot.send_message(message.from_user.id, 'Ввдеите год который хотите заполнить:')

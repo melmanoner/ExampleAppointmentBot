@@ -8,6 +8,7 @@ from utils.dbms import create_tables
 
 
 
+
 async def bot_start(_):
     bot_info = await bot.get_me()
     name = bot_info['first_name']
